@@ -1,29 +1,44 @@
 class Applesauce < Formula
   desc "A command-line interface for compressing and decompressing files using macos transparent compression"
-  version "0.5.4"
-  on_macos do
-    on_arm do
-      url "https://github.com/Dr-Emann/applesauce/releases/download/applesauce-cli-v0.5.4/applesauce-cli-aarch64-apple-darwin.tar.xz"
-      sha256 "d0e4a33c5f5a551c3037dfe933ca487cfa45b40d9023cb718984818e19a6a86d"
+  homepage "https://github.com/Dr-Emann/applesauce"
+  version "0.5.5"
+  if OS.mac?
+    if Hardware::CPU.arm?
+      url "https://github.com/Dr-Emann/applesauce/releases/download/applesauce-cli-v0.5.5/applesauce-cli-aarch64-apple-darwin.tar.xz"
+      sha256 "3edff5b739a388d29bc5e4b0f95f5d60c5206acc9c986340a5eadf6264fc714a"
     end
-    on_intel do
-      url "https://github.com/Dr-Emann/applesauce/releases/download/applesauce-cli-v0.5.4/applesauce-cli-x86_64-apple-darwin.tar.xz"
-      sha256 "033e037ff0109da511cc52d9fa766d419efd248bfc76024ef5366148919e57fd"
+    if Hardware::CPU.intel?
+      url "https://github.com/Dr-Emann/applesauce/releases/download/applesauce-cli-v0.5.5/applesauce-cli-x86_64-apple-darwin.tar.xz"
+      sha256 "c085f314766ada4f90ad6c464ab779b27804f23ae9c676f96f39416a2fa246ff"
     end
   end
   license "GPL-3.0-or-later"
 
+  BINARY_ALIASES = {
+    "aarch64-apple-darwin": {},
+    "x86_64-apple-darwin":  {},
+  }.freeze
+
+  def target_triple
+    cpu = Hardware::CPU.arm? ? "aarch64" : "x86_64"
+    os = OS.mac? ? "apple-darwin" : "unknown-linux-gnu"
+
+    "#{cpu}-#{os}"
+  end
+
+  def install_binary_aliases!
+    BINARY_ALIASES[target_triple.to_sym].each do |source, dests|
+      dests.each do |dest|
+        bin.install_symlink bin/source.to_s => dest
+      end
+    end
+  end
+
   def install
-    on_macos do
-      on_arm do
-        bin.install "applesauce"
-      end
-    end
-    on_macos do
-      on_intel do
-        bin.install "applesauce"
-      end
-    end
+    bin.install "applesauce" if OS.mac? && Hardware::CPU.arm?
+    bin.install "applesauce" if OS.mac? && Hardware::CPU.intel?
+
+    install_binary_aliases!
 
     # Homebrew will automatically install these, so we don't need to do that
     doc_files = Dir["README.*", "readme.*", "LICENSE", "LICENSE.*", "CHANGELOG.*"]
@@ -31,6 +46,6 @@ class Applesauce < Formula
 
     # Install any leftover files in pkgshare; these are probably config or
     # sample files.
-    pkgshare.install *leftover_contents unless leftover_contents.empty?
+    pkgshare.install(*leftover_contents) unless leftover_contents.empty?
   end
 end
