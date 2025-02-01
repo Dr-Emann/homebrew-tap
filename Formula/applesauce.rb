@@ -1,15 +1,15 @@
 class Applesauce < Formula
   desc "A command-line interface for compressing and decompressing files using macos transparent compression"
   homepage "https://github.com/Dr-Emann/applesauce"
-  version "0.5.9"
+  version "0.5.11"
   if OS.mac?
     if Hardware::CPU.arm?
-      url "https://github.com/Dr-Emann/applesauce/releases/download/applesauce-cli-v0.5.9/applesauce-cli-aarch64-apple-darwin.tar.xz"
-      sha256 "37e3fe2c1d2dd73ab18e30279833e8208ed08e3e2c7ae929866beed45f8c3109"
+      url "https://github.com/Dr-Emann/applesauce/releases/download/applesauce-cli-v0.5.11/applesauce-cli-aarch64-apple-darwin.tar.xz"
+      sha256 "04610f5ea7d1b9f2a0bd90f6d437549bce93d2eeb8c3c1e4761941b5991bc9cf"
     end
     if Hardware::CPU.intel?
-      url "https://github.com/Dr-Emann/applesauce/releases/download/applesauce-cli-v0.5.9/applesauce-cli-x86_64-apple-darwin.tar.xz"
-      sha256 "4dbd3492d167d23ff35b3857311a5113e7e173bf71996d14edf58bad31e10da4"
+      url "https://github.com/Dr-Emann/applesauce/releases/download/applesauce-cli-v0.5.11/applesauce-cli-x86_64-apple-darwin.tar.xz"
+      sha256 "2b597529ea6b85315f5ff22357167926e3eae1327cc17d5836cb1150736436cd"
     end
   end
   license "GPL-3.0-or-later"
